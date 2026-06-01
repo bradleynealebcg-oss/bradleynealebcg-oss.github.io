@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GCSE Mathematics Paper 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background: url('bed_col_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  font-family: Roboto, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+#clock {
+  font-family: 'Orbitron', monospace;
+  color: white;
+  font-size: 9vw;
+  text-align: center;
+  background-color: transparent;
+  padding: 4px 30px;
+  border-radius: 10px;
+  margin-top: 155px;
+  letter-spacing: 0.1em;
+  width: 16ch;
+}
+
+
+/* MAIN TEXT */
+.info-container {
+  margin-top: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px; /* smaller gap */
+}
+
+.info-small {
+  font-size: 40px;
+}
+
+#date {
+  font-size: 50px;
+}
+
+#log {
+  font-size: 40px;
+  margin-top: 5px;
+}
+
+/* BUTTON ROW */
+#bottomRow {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+/* BUTTONS */
+button {
+  padding: 6px 16px;
+  font-size: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: 0.18s;
+}
+
+button:hover {
+  background-color: red;
+  color: white;
+}
+
+#extraTimeButton.active {
+  background-color: orange;
+  color: black;
+}
+
+/* HOME BUTTON */
+#homeBtn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 10px 20px;
+  font-size: 28px;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CLOCK -->
+<div id="clock">00:00:00</div>
+
+<!-- MAIN INFO -->
+<div class="info-container">
+  <div id="date">Thursday, 6 November 2025</div>
+  <div class="info-small">Centre Name: Bedford College | Centre Number: 15119</div>
+  <div class="info-small">Paper Ref: 1MA1/3F | GCSE Mathematics Paper 3 (Calculator)</div>
+  <div class="info-small">Duration: 1 hours 30 minutes</div>
+  <div id="log"></div>
+</div>
+
+<!-- BUTTONS -->
+<div id="bottomRow">
+  <button id="startButton">Start</button>
+  <button id="extraTimeButton">+25% Time</button>
+  <button id="resetButton">Reset</button>
+</div>
+
+<button id="homeBtn" onclick="location.href='Exam_Clock.html'">Back to Home</button>
+
+<script>
+/* CLOCK UPDATE */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+
+  const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date').textContent = now.toLocaleDateString('en-GB', options);
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* BUTTON ELEMENTS */
+const startButton = document.getElementById('startButton');
+const extraTimeButton = document.getElementById('extraTimeButton');
+const resetButton = document.getElementById('resetButton');
+const log = document.getElementById('log');
+
+let examStarted = false;
+let useExtraTime = false;
+
+/* EXTRA TIME BUTTON */
+extraTimeButton.addEventListener('click', () => {
+  useExtraTime = true;
+  extraTimeButton.classList.add('active');
+  extraTimeButton.textContent = '25% Added';
+});
+
+/* START BUTTON */
+startButton.addEventListener('click', () => {
+  if (!examStarted) {
+
+    const now = new Date();
+    const baseMinutes = 90; // 1 hours 30 minutes
+
+    const normalEnd = new Date(now.getTime() + baseMinutes * 60000);
+
+    const extraMinutes = baseMinutes + 23;
+    const extraEnd = new Date(now.getTime() + extraMinutes * 60000);
+
+    let html = `
+      <div>Start Time: <strong>${now.toLocaleTimeString('en-GB')}</strong></div>
+      <div>End Time: <strong>${normalEnd.toLocaleTimeString('en-GB')}</strong></div>
+    `;
+
+    if (useExtraTime) {
+      html += `
+        <div>25% Extra Time End: <strong>${extraEnd.toLocaleTimeString('en-GB')}</strong></div>
+        <div>(Applicable only if 25% extra time is approved)</div>
+      `;
+    }
+
+    log.innerHTML = html;
+
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
+
+    startButton.textContent = 'Exam In Progress';
+    startButton.disabled = true;
+    startButton.style.backgroundColor = 'grey';
+
+    examStarted = true;
+  }
+});
+
+/* RESET BUTTON */
+resetButton.addEventListener('click', () => {
+  log.innerHTML = '';
+
+  startButton.disabled = false;
+  startButton.textContent = 'Start';
+  startButton.style.backgroundColor = 'white';
+  startButton.style.color = 'black';
+
+  useExtraTime = false;
+  extraTimeButton.classList.remove('active');
+  extraTimeButton.textContent = '+25% Time';
+  extraTimeButton.style.backgroundColor = 'white';
+  extraTimeButton.style.color = 'black';
+
+  examStarted = false;
+});
+</script>
+
+</body>
+</html>

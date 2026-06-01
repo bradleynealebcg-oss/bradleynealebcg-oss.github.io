@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Exam Clock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Correct font links -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background: url('bed_col_bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif; /* matches your template */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+  }
+
+  /* Bigger date ABOVE the clock */
+  #today {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(36px, 5vw, 70px);
+    color: #fff;
+    text-shadow: 0 0 12px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    user-select: none;
+  }
+
+  /* Large digital clock (Orbitron) */
+  #clock {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(80px, 14vw, 240px);
+    color: #fff;
+    text-shadow: 0 0 18px rgba(0,0,0,0.6);
+    user-select: none;
+    margin-bottom: 100px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Buttons */
+  button {
+    padding: 12px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  /* Fullscreen button */
+  #fullscreenBtn {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: #fff;
+    color: #000;
+  }
+  #fullscreenBtn:hover {
+    background: #e20000;
+    color: #fff;
+  }
+
+  /* Back to Home button */
+  #homeBtn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #222;
+    color: #fff;
+  }
+  #homeBtn:hover {
+    background: #000;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay" aria-hidden="true"></div>
+
+<!-- Date ABOVE the clock -->
+<div id="today">Loading date...</div>
+
+<!-- Clock -->
+<div id="clock" aria-live="polite">00:00:00</div>
+
+<!-- Buttons -->
+<button id="fullscreenBtn" type="button">Fullscreen</button>
+<button id="homeBtn" onclick="location.href='Exam_Clock.html'">Back to Home</button>
+
+<script>
+  function two(n){ return String(n).padStart(2,'0'); }
+
+  /* CLOCK */
+  function updateClock(){
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      `${two(now.getHours())}:${two(now.getMinutes())}:${two(now.getSeconds())}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  /* DATE */
+  function updateDate(){
+    const today = new Date().toLocaleDateString('en-GB', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    document.getElementById('today').textContent = today;
+  }
+  updateDate();
+
+  /* FULLSCREEN */
+  function toggleFullscreen(){
+    if (!document.fullscreenElement){
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
+  document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+</script>
+
+</body>
+</html>

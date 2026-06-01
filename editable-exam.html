@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Editable Exam Template</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ========= GLOBAL PAGE STYLING ========= */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background: url('bed_col_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  font-family: Roboto, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ========= LARGE CLOCK ========= */
+#clock {
+  font-family: 'Orbitron', monospace;
+  color: white;
+  font-size: 9vw;
+  text-align: center;
+  background-color: transparent;
+  padding: 4px 30px;
+  border-radius: 10px;
+  margin-top: 155px;
+  letter-spacing: 0.1em;
+  width: 16ch;
+}
+
+/* ========= FROSTED EDIT BOX PANEL ========= */
+#editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+  align-items: center;
+
+  background: rgba(0,0,0,0.55);
+  padding: 30px;
+  border-radius: 14px;
+  backdrop-filter: blur(4px);
+}
+
+/* ========= INPUT FIELDS (CLEAR + MODERN) ========= */
+#editForm input {
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 2px solid #ffffffaa;
+  background: rgba(255,255,255,0.9);
+  color: black;
+  font-size: 22px;
+  width: min(700px, 86vw);
+  outline: none;
+  transition: 0.2s;
+}
+
+#editForm input:focus {
+  border-color: #ff3333;
+  background: white;
+}
+
+/* ========= DISPLAY SECTION ========= */
+.info-container {
+  margin-top: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.info-small {
+  font-size: 40px;
+}
+
+#date {
+  font-size: 50px;
+}
+
+#log {
+  font-size: 40px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* ========= BUTTON ROW ========= */
+#bottomRow {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  display: none; /* shown only after Lock */
+  gap: 12px;
+}
+
+/* ========= GENERAL BUTTON STYLE ========= */
+button {
+  padding: 6px 16px;
+  font-size: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: 0.18s;
+}
+
+button:hover {
+  background-color: red;
+  color: white;
+}
+
+/* Extra time active */
+#extraTimeButton.active {
+  background-color: orange;
+  color: black;
+}
+
+/* ========= HOME BUTTON ========= */
+#homeBtn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 10px 20px;
+  font-size: 22px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ========= LARGE CLOCK ========= -->
+<div id="clock">00:00:00</div>
+
+<!-- ========= EDITABLE FORM ========= -->
+<div id="editForm">
+  <input id="dateInput" type="text" placeholder="Enter Date (e.g. Tuesday 4th November 2025)">
+  <input id="centreInput" type="text" placeholder="Enter Centre Name">
+  <input id="centreNumInput" type="text" placeholder="Enter Centre Number">
+  <input id="paperRefInput" type="text" placeholder="Enter Paper Reference (e.g. 1EN0/01)">
+  <input id="titleInput" type="text" placeholder="Enter Paper Title (e.g. GCSE English Language Paper 1)">
+  
+  <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+    <input id="durationH" type="number" placeholder="Hours" min="0" style="width:200px;">
+    <input id="durationM" type="number" placeholder="Minutes" min="0" style="width:200px;">
+  </div>
+
+  <button id="lockBtn">Lock &amp; Display</button>
+</div>
+
+<!-- ========= DISPLAY MODE ========= -->
+<div class="info-container" id="displaySection" style="display:none;">
+  <div id="date" class="info-small"></div>
+  <div class="info-small" id="centreInfo"></div>
+  <div class="info-small" id="paperInfo"></div>
+  <div class="info-small" id="durationInfo"></div>
+  <div id="log"></div>
+</div>
+
+<!-- ========= CONTROL BUTTONS (Start / Extra Time / Reset / Edit) ========= -->
+<div id="bottomRow">
+  <button id="startButton">Start</button>
+  <button id="extraTimeButton">+25% Time</button>
+  <button id="resetButton">Reset</button>
+  <button id="editBtn">Edit Info</button>
+</div>
+
+<button id="homeBtn" onclick="location.href='Exam_Clock.html'">Back to Home</button>
+
+<script>
+/* ========= CLOCK ========= */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ========= AUTO-FILL TODAY'S DATE ========= */
+document.getElementById('dateInput').value =
+  new Date().toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+/* ========= VARIABLES ========= */
+const lockBtn = document.getElementById('lockBtn');
+const editForm = document.getElementById('editForm');
+const displaySection = document.getElementById('displaySection');
+const bottomRow = document.getElementById('bottomRow');
+const startButton = document.getElementById('startButton');
+const extraTimeButton = document.getElementById('extraTimeButton');
+const resetButton = document.getElementById('resetButton');
+const editBtn = document.getElementById('editBtn');
+const log = document.getElementById('log');
+
+let examStarted = false;
+let useExtraTime = false;
+
+/* ========= LOCK & DISPLAY ========= */
+lockBtn.addEventListener('click', () => {
+  const date = document.getElementById('dateInput').value;
+  const centre = document.getElementById('centreInput').value;
+  const centreNum = document.getElementById('centreNumInput').value;
+  const paperRef = document.getElementById('paperRefInput').value;
+  const title = document.getElementById('titleInput').value;
+  const durationH = document.getElementById('durationH').value || 0;
+  const durationM = document.getElementById('durationM').value || 0;
+
+  document.getElementById('date').textContent = date;
+  document.getElementById('centreInfo').textContent = `Centre Name: ${centre} | Centre Number: ${centreNum}`;
+  document.getElementById('paperInfo').textContent = `Paper Ref: ${paperRef} | ${title}`;
+  document.getElementById('durationInfo').textContent = `Duration: ${durationH} hour(s) ${durationM} minute(s)`;
+
+  editForm.style.display = 'none';
+  displaySection.style.display = 'flex';
+  bottomRow.style.display = 'flex';
+});
+
+/* ========= EDIT MODE ========= */
+editBtn.addEventListener('click', () => {
+  displaySection.style.display = 'none';
+  bottomRow.style.display = 'none';
+  editForm.style.display = 'flex';
+});
+
+/* ========= +25% EXTRA TIME ========= */
+extraTimeButton.addEventListener('click', () => {
+  useExtraTime = true;
+  extraTimeButton.classList.add('active');
+  extraTimeButton.textContent = '25% Added';
+});
+
+/* ========= START EXAM ========= */
+startButton.addEventListener('click', () => {
+  if (examStarted) return;
+
+  const now = new Date();
+  const durationHours = parseInt(document.getElementById('durationH').value || 0, 10);
+  const durationMinutes = parseInt(document.getElementById('durationM').value || 0, 10);
+  const baseMinutes = (durationHours * 60) + durationMinutes;
+
+  const normalEnd = new Date(now.getTime() + baseMinutes * 60000);
+  const extraEnd = new Date(now.getTime() + baseMinutes * 1.25 * 60000);
+
+  let html = `
+    <div>Start Time: <strong>${now.toLocaleTimeString('en-GB')}</strong></div>
+    <div>End Time: <strong>${normalEnd.toLocaleTimeString('en-GB')}</strong></div>
+  `;
+  if (useExtraTime) {
+    html += `
+      <div>25% Extra Time End: <strong>${extraEnd.toLocaleTimeString('en-GB')}</strong></div>
+      <div>(25% extra time applied)</div>
+    `;
+  }
+
+  log.innerHTML = html;
+
+  document.documentElement.requestFullscreen?.();
+
+  startButton.textContent = 'Exam In Progress';
+  startButton.disabled = true;
+  startButton.style.backgroundColor = 'grey';
+
+  examStarted = true;
+});
+
+/* ========= RESET EXAM ========= */
+resetButton.addEventListener('click', () => {
+  log.innerHTML = '';
+
+  startButton.disabled = false;
+  startButton.textContent = 'Start';
+  startButton.style.backgroundColor = 'white';
+  startButton.style.color = 'black';
+
+  useExtraTime = false;
+  extraTimeButton.classList.remove('active');
+  extraTimeButton.textContent = '+25% Time';
+  extraTimeButton.style.backgroundColor = 'white';
+  extraTimeButton.style.color = 'black';
+
+  examStarted = false;
+});
+</script>
+
+</body>
+</html>
