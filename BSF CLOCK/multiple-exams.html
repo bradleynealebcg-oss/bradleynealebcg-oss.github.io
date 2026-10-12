@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>4‑Exam Dashboard (Editable)</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ---- GLOBAL PAGE ---- */
+html, body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  background: url('bed_col_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: Roboto, Arial, sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---- CLOCK ---- */
+#clock {
+  margin-top: 40px;
+  font-family: 'Orbitron', monospace;
+  font-size: 7vw;
+  color: green;
+  background: transparent;
+  letter-spacing: 0.1em;
+}
+
+/* ---- GRID ---- */
+.grid {
+  margin-top: 30px;
+  width: 90%;
+  max-width: 1800px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+/* ---- EACH PANEL ---- */
+.exam-box {
+  background: rgba(0,0,0,0.55);
+  padding: 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  color: white;
+  text-align: center;
+  min-height: 300px;
+}
+
+/* ---- DISPLAY MODE ---- */
+.display-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 28px;
+  padding: 10px;
+}
+
+/* ---- EDIT FORM ---- */
+.edit-panel {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.edit-panel input {
+  padding: 12px 15px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid #ffffffaa;
+  background: rgba(255,255,255,0.9);
+  color: black;
+  outline: none;
+}
+
+.edit-panel input:focus {
+  border-color: #ff3333;
+  background: white;
+}
+
+/* ---- CONTROLS ---- */
+.controls {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button {
+  padding: 6px 16px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover {
+  background: red;
+  color: white;
+}
+
+.extra.active {
+  background: orange !important;
+  color: black !important;
+}
+
+/* ---- LOG ---- */
+.log {
+  font-size: 22px;
+  margin-top: 10px;
+  min-height: 60px;
+}
+
+/* ---- HOME BUTTON ---- */
+#homeBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 22px;
+  background: #222;
+  color: white;
+  border-radius: 8px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+
+<!-- CLOCK -->
+<div id="clock">00:00:00</div>
+
+<!-- 2x2 GRID OF EXAMS -->
+<div class="grid">
+
+  <!-- ==== TEMPLATE FOR ALL EXAM BOXES ==== -->
+  <!-- ==== EXAM 1 ==== -->
+  <div class="exam-box" data-exam="1">
+
+    <div class="display-section" id="display1">
+      <div>Click Edit to enter exam details</div>
+    </div>
+
+    <div class="edit-panel" id="edit1">
+      <input class="date" placeholder="Date">
+      <input class="centre" placeholder="Centre Name">
+      <input class="centrenum" placeholder="Centre Number">
+      <input class="paperref" placeholder="Paper Reference">
+      <input class="title" placeholder="Paper Title">
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <input class="durH" type="number" placeholder="Hours" min="0">
+        <input class="durM" type="number" placeholder="Minutes" min="0">
+      </div>
+      <button class="lock">Lock & Display</button>
+    </div>
+
+    <div class="log" id="log1"></div>
+
+    <div class="controls" id="controls1">
+      <button class="start">Start</button>
+      <button class="extra">+25% Time</button>
+      <button class="reset">Reset</button>
+      <button class="edit">Edit Info</button>
+    </div>
+  </div>
+
+  <!-- ==== EXAM 2 ==== -->
+  <div class="exam-box" data-exam="2">
+    <div class="display-section" id="display2"><div>Click Edit to enter exam details</div></div>
+
+    <div class="edit-panel" id="edit2">
+      <input class="date" placeholder="Date">
+      <input class="centre" placeholder="Centre Name">
+      <input class="centrenum" placeholder="Centre Number">
+      <input class="paperref" placeholder="Paper Reference">
+      <input class="title" placeholder="Paper Title">
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <input class="durH" type="number" placeholder="Hours" min="0">
+        <input class="durM" type="number" placeholder="Minutes" min="0">
+      </div>
+      <button class="lock">Lock & Display</button>
+    </div>
+
+    <div class="log" id="log2"></div>
+    <div class="controls" id="controls2">
+      <button class="start">Start</button>
+      <button class="extra">+25% Time</button>
+      <button class="reset">Reset</button>
+      <button class="edit">Edit Info</button>
+    </div>
+  </div>
+
+  <!-- ==== EXAM 3 ==== -->
+  <div class="exam-box" data-exam="3">
+    <div class="display-section" id="display3"><div>Click Edit to enter exam details</div></div>
+
+    <div class="edit-panel" id="edit3">
+      <input class="date" placeholder="Date">
+      <input class="centre" placeholder="Centre Name">
+      <input class="centrenum" placeholder="Centre Number">
+      <input class="paperref" placeholder="Paper Reference">
+      <input class="title" placeholder="Paper Title">
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <input class="durH" type="number" placeholder="Hours" min="0">
+        <input class="durM" type="number" placeholder="Minutes" min="0">
+      </div>
+      <button class="lock">Lock & Display</button>
+    </div>
+
+    <div class="log" id="log3"></div>
+    <div class="controls" id="controls3">
+      <button class="start">Start</button>
+      <button class="extra">+25% Time</button>
+      <button class="reset">Reset</button>
+      <button class="edit">Edit Info</button>
+    </div>
+  </div>
+
+  <!-- ==== EXAM 4 ==== -->
+  <div class="exam-box" data-exam="4">
+    <div class="display-section" id="display4"><div>Click Edit to enter exam details</div></div>
+
+    <div class="edit-panel" id="edit4">
+      <input class="date" placeholder="Date">
+      <input class="centre" placeholder="Centre Name">
+      <input class="centrenum" placeholder="Centre Number">
+      <input class="paperref" placeholder="Paper Reference">
+      <input class="title" placeholder="Paper Title">
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <input class="durH" type="number" placeholder="Hours" min="0">
+        <input class="durM" type="number" placeholder="Minutes" min="0">
+      </div>
+      <button class="lock">Lock & Display</button>
+    </div>
+
+    <div class="log" id="log4"></div>
+    <div class="controls" id="controls4">
+      <button class="start">Start</button>
+      <button class="extra">+25% Time</button>
+      <button class="reset">Reset</button>
+      <button class="edit">Edit Info</button>
+    </div>
+  </div>
+
+
+</div>
+
+<button id="homeBtn" onclick="location.href='Exam_Clock.html'">Back to Home</button>
+
+<script>
+/* CLOCK */
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-GB');
+}, 1000);
+
+/* ----- CORE LOGIC FOR ALL 4 BOXES ----- */
+document.querySelectorAll('.exam-box').forEach(box => {
+  
+  const id = box.dataset.exam;
+
+  const displaySec = document.getElementById('display' + id);
+  const editPanel  = document.getElementById('edit' + id);
+  const ctrl = document.getElementById('controls' + id);
+  const log = document.getElementById('log' + id);
+
+  const editBtn = ctrl.querySelector('.edit');
+  const lockBtn = editPanel.querySelector('.lock');
+  const startBtn = ctrl.querySelector('.start');
+  const extraBtn = ctrl.querySelector('.extra');
+  const resetBtn = ctrl.querySelector('.reset');
+
+  let examStarted = false;
+  let extra = false;
+
+  /* EDIT BUTTON */
+  editBtn.addEventListener('click', () => {
+    displaySec.style.display = 'none';
+    ctrl.style.display = 'none';
+    editPanel.style.display = 'flex';
+  });
+
+  /* LOCK BUTTON */
+  lockBtn.addEventListener('click', () => {
+    const date = editPanel.querySelector('.date').value;
+    const centre = editPanel.querySelector('.centre').value;
+    const centrenum = editPanel.querySelector('.centrenum').value;
+    const paper = editPanel.querySelector('.paperref').value;
+    const title = editPanel.querySelector('.title').value;
+    const h = editPanel.querySelector('.durH').value || 0;
+    const m = editPanel.querySelector('.durM').value || 0;
+
+    displaySec.innerHTML = `
+      <div>${date}</div>
+      <div>Centre: ${centre} (${centrenum})</div>
+      <div>${paper} — ${title}</div>
+      <div>Duration: ${h}h ${m}m</div>
+    `;
+
+    editPanel.style.display = 'none';
+    displaySec.style.display = 'flex';
+    ctrl.style.display = 'flex';
+  });
+
+  /* EXTRA TIME */
+  extraBtn.addEventListener('click', () => {
+    extra = true;
+    extraBtn.classList.add('active');
+    extraBtn.textContent = '25% Added';
+  });
+
+
+startBtn.addEventListener('click', () => {
+  if (examStarted) return;
+
+  const h = parseInt(editPanel.querySelector('.durH').value || 0, 10);
+  const m = parseInt(editPanel.querySelector('.durM').value || 0, 10);
+
+  const baseMinutes = h * 60 + m;
+
+  const now = new Date();
+
+  // Normal end
+  const normalEnd = new Date(now.getTime() + baseMinutes * 60000);
+
+  // JCQ‑compliant 25% time (rounded UP to nearest minute)
+  const extraMinutes = Math.ceil(baseMinutes * 1.25);
+  const extraEnd = new Date(now.getTime() + extraMinutes * 60000);
+
+  let out = `
+    <div>Start: <strong>${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}</strong></div>
+    <div>Normal End: <strong>${normalEnd.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}</strong></div>
+  `;
+
+  if (extra) {
+    out += `
+      <div>25% End: <strong>${extraEnd.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}</strong></div>
+      <div>(JCQ 25% extra time applied)</div>
+    `;
+  }
+
+  log.innerHTML = out;
+
+  startBtn.textContent = 'Running';
+  startBtn.disabled = true;
+  startBtn.style.background = 'grey';
+
+  examStarted = true;
+});
+
+
+  /* RESET BUTTON */
+  resetBtn.addEventListener('click', () => {
+    log.innerHTML = '';
+    startBtn.disabled = false;
+    startBtn.textContent = 'Start';
+    startBtn.style.background = 'white';
+    startBtn.style.color = 'black';
+
+    extra = false;
+    extraBtn.classList.remove('active');
+    extraBtn.textContent = '+25% Time';
+
+    examStarted = false;
+  });
+
+});
+</script>
+
+</body>
+</html>

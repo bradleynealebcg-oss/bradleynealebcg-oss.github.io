@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bedford College Exam Clock</title>
+<link rel="icon" type="image/x-icon" href="clock.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background: url('bed_col_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  font-family: Roboto, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  
+  /* ---- Center everything on the page ---- */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  overflow: hidden;
+}
+
+#logoBox {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  z-index: 9999;
+}
+
+#logo {
+  height: 100px;
+  width: auto;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: White;
+
+  /* slight shadow for readability */
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+}
+
+/* ---- GRID LAYOUT ---- */
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  width: 80%;
+  max-width: 1500px;
+}
+
+button {
+  font-size: 26px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  color: black;
+  border: 2px solid black;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 100%;
+  text-align: center;
+}
+
+button:hover {
+  background-color: red;
+  color: white;
+  transform: scale(1.03);
+}
+
+/* ---- Mobile Breakpoints ---- */
+@media (max-width: 900px) {
+  .button-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .button-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Examinations Clocks</h1>
+
+<div class="button-container">
+  <button onclick="window.open('gcse-english-language-paper1.html', '_blank')">📘 GCSE English Language Paper 1</button>
+  <button onclick="window.open('gcse-maths-paper1.html', '_blank')">📗 GCSE Mathematics Paper 1 (Non-Calculator)</button>
+  <button onclick="window.open('gcse-english-language-paper2.html', '_blank')">📙 GCSE English Language Paper 2</button>
+  <button onclick="window.open('gcse-maths-paper2.html', '_blank')">📕 GCSE Mathematics Paper 2 (Calculator)</button>
+  <button onclick="window.open('gcse-maths-paper3.html', '_blank')">📔 GCSE Mathematics Paper 3 (Calculator)</button>
+  <button onclick="window.open('editable-exam.html', '_blank')">📝 Editable Exam Template</button>
+  <button onclick="window.open('multiple-exams.html', '_blank')">📝 Multiple Exams Template</button>
+  <button onclick="window.open('clock.html', '_blank')">📝 Clock</button>
+</div>
+
+</body>
+</html>
