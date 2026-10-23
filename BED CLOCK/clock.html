@@ -104,13 +104,55 @@
   function two(n){ return String(n).padStart(2,'0'); }
 
   /* CLOCK */
-  function updateClock(){
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      `${two(now.getHours())}:${two(now.getMinutes())}:${two(now.getSeconds())}`;
+  
+let timeOffset = 0;
+let hasSyncedTime = false;
+
+async function syncInternetTime() {
+  try {
+    const response = await fetch(
+      'https://worldtime.timezone.io/api/timezone/Europe/London',
+      { cache: 'no-store' }
+    );
+
+    if (!response.ok) throw new Error('Time service unavailable');
+
+    const data = await response.json();
+
+    // Align the computer's clock with the internet time.
+    timeOffset = data.unixtime * 1000 - Date.now();
+    hasSyncedTime = true;
+
+    console.log('Internet time synchronised:', data.timezone);
+  } catch (error) {
+    console.warn(
+      'Internet time unavailable. Using the last available time.'
+    );
   }
-  setInterval(updateClock, 1000);
-  updateClock();
+}
+
+function getAccurateNow() {
+  return new Date(Date.now() + timeOffset);
+}
+
+function updateClock() {
+  const now = getAccurateNow();
+
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-GB', {
+      timeZone: 'Europe/London',
+      hour12: false
+    });
+}
+
+// Synchronise immediately and then every 30 minutes.
+syncInternetTime();
+setInterval(syncInternetTime, 30 * 60 * 1000);
+
+// Keep the display ticking every second.
+updateClock();
+setInterval(updateClock, 1000);
+
 
   /* DATE */
   function updateDate(){
